@@ -31,7 +31,7 @@ Tout d abord, vous devez cloner le projet depuis GitHub ou Docker Hub (si vous p
 
 **Via GitHub** :
 ```bash
-git clone <votre_lien_git> #AJOUTER LIEN GITHUB UNE FOIS PUSH
+git clone https://github.com/YA2SINEE/sha256-webapp.git
 cd sha256-webapp
 
 **Via Docker Hub** :
