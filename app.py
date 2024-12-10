@@ -8,9 +8,10 @@ app = Flask(__name__)
 def home():
     # Lire les données existantes dans data.json
     try:
-        with open('data.json', 'r') as f:
+        with open('/data/data.json', 'r') as f:
             data_store = json.load(f)
     except FileNotFoundError:
+        app.logger.error("No file found")
         data_store = []
 
     # Créer une réponse HTML qui affiche les données
@@ -35,7 +36,7 @@ def generate_hash():
 
     # Lire les données existantes
     try:
-        with open('data.json', 'r') as f:
+        with open('/data/data.json', 'r') as f:
             data_store = json.load(f)
     except FileNotFoundError:
         data_store = []
@@ -44,7 +45,7 @@ def generate_hash():
     data_store.append({'input': string_to_hash, 'hash': hash_hex})
 
     # Sauvegarder dans data.json
-    with open('data.json', 'w') as f:
+    with open('/data/data.json', 'w') as f:
         json.dump(data_store, f, indent=4)
 
     return jsonify({"input": string_to_hash, "hash": hash_hex})
@@ -52,7 +53,7 @@ def generate_hash():
 @app.route('/data', methods=['GET'])
 def get_data():
     try:
-        with open('data.json', 'r') as f:
+        with open('/data/data.json', 'r') as f:
             data_store = json.load(f)
         return jsonify(data_store)
     except FileNotFoundError:
