@@ -19,7 +19,7 @@ L objectif de ce projet est de démontrer l'utilisation de Docker pour déployer
 
 ## Prérequis
 
-- **Docker** : Assurez-vous que Docker est installé sur votre machine. Vous pouvez suivre les instructions d installation sur le [site officiel de Docker](https://docs.docker.com/get-docker/).
+- **Docker** : Assurez-vous que Docker est installé sur votre machine. Vous pouvez suivre les instructions d'installation sur le [site officiel de Docker](https://docs.docker.com/get-docker/).
 
 ---
 
@@ -27,57 +27,73 @@ L objectif de ce projet est de démontrer l'utilisation de Docker pour déployer
 
 ### 1. Cloner ce repository
 
-Tout d abord, vous devez cloner le projet depuis GitHub ou Docker Hub (si vous préférez utiliser l image Docker directement).
+Tout d'abord, vous devez cloner le projet depuis GitHub ou Docker Hub (si vous préférez utiliser l'image Docker directement).
 
 **Via GitHub** :
+
 ```bash
 git clone https://github.com/YA2SINEE/sha256-webapp.git
 cd sha256-webapp
+```
 
 **Via Docker Hub** :
+
+```
 docker pull ya2sinee/sha256-webapp:v1
+```
 
-2. Construire l image Docker (si vous avez cloné le projet)
-Si vous avez cloné le repository Git, vous devez maintenant construire l image Docker avec la commande suivante :
+2. Construire l'image Docker (si vous avez cloné le projet)
+Si vous avez cloné le repository Git, vous devez maintenant construire l'image Docker avec la commande suivante :
 
+```bash
 docker build -t sha256-webapp .
+```
 
-3. Lancer l application
-Une fois l image construite ou téléchargée, vous pouvez lancer l application via Docker en utilisant cette commande :
+3. Créer le docker volume
 
-docker run -d -p 5001:5000 -v "$(pwd)/data.json:/app/data.json" sha256-webapp
+```bash
+docker create volume sha256-webapp-storage
+```
 
-Cela exécutera l application sur le port 5001 et sauvegardera les données dans le fichier data.json à l endroit où vous avez cloné le projet.
+4. Lancer l'application
+Une fois l'image construite ou téléchargée, vous pouvez lancer l'application via Docker en utilisant cette commande :
+```bash
+docker run -d -p 5001:5000 -v sha256-webapp-storage:/data/ sha256-webapp
+```
+
+Cela exécutera l'application sur le port 5001 et sauvegardera les données dans le fichier `data.json` à l'endroit où vous avez cloné le projet.
 
 ---
 
 Utilisation
 
-1. Générer un hash SHA256 via l API REST
-Vous pouvez envoyer une requête POST à l API pour générer un hash SHA256 à partir d une chaîne de caractères. Par exemple, pour la chaîne "hello", vous pouvez utiliser curl avec la commande suivante :
+1. Générer un hash SHA256 via l'API REST
+Vous pouvez envoyer une requête POST à l'API pour générer un hash SHA256 à partir d'une chaîne de caractères. Par exemple, pour la chaîne "hello", vous pouvez utiliser `curl` avec la commande suivante :
 
+```bash
 curl -X POST -H "Content-Type: application/json" -d '{"string":"hello"}' http://localhost:5001/hash
-
+```
 
 Cela renverra un hash SHA256 de la chaîne "hello" et l ajoutera au fichier data.json.
 
-2. Visualiser l historique sur l interface Web
+2. Visualiser l'historique sur l'interface Web
 
-Une fois l application lancée, vous pouvez accéder à l interface web pour voir l historique des chaînes et leurs hashes générés. Ouvrez simplement votre navigateur et rendez-vous à l adresse suivante :
+Une fois l'application lancée, vous pouvez accéder à l'interface web pour voir l'historique des chaînes et leurs hashes générés. Ouvrez simplement votre navigateur et rendez-vous à l adresse suivante :
 
-http://127.0.0.1:5001
+[http://127.0.0.1:5001](http://127.0.0.1:5001)
 
-L interface affichera les chaînes traitées et leurs hashes associés.
+L'interface affichera les chaînes traitées et leurs hashes associés.
 
 ---
 
 Résolution des problèmes
 
-Port déjà utilisé : Si vous obtenez une erreur comme "port déjà alloué", cela signifie qu une autre application utilise déjà le port 5001. Vous pouvez changer le port en modifiant la commande docker run pour utiliser un autre port. 
+Port déjà utilisé : Si vous obtenez une erreur comme "port déjà alloué", cela signifie qu une autre application utilise déjà le port 5001. Vous pouvez changer le port en modifiant la commande `docker run` pour utiliser un autre port. 
 Par exemple :
+```bash
+docker run -d -p 5002:5000 -v sha256-webapp-storage:/data/ sha256-webapp
+```
 
-docker run -d -p 5002:5000 -v "$(pwd)/data.json:/app/data.json" sha256-webapp
-
-Fichier data.json vide : Si vous ne voyez pas de données dans data.json, assurez-vous que vous avez bien envoyé une requête POST à l API. Vérifiez également que le fichier data.json est bien dans le bon répertoire et est accessible.
+Fichier `data.json` vide : Si vous ne voyez pas de données dans data.json, assurez-vous que vous avez bien envoyé une requête POST à l API. Vérifiez également que le fichier data.json est bien dans le bon répertoire et est accessible.
 
 ---

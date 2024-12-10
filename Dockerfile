@@ -7,9 +7,12 @@ WORKDIR /app
 # Copier les fichiers nécessaires
 COPY requirements.txt requirements.txt
 COPY app.py app.py
+COPY data.json /data/data.json
 
 # Installer les dépendances
 RUN pip install -r requirements.txt
+
+VOLUME [ "/data" ]
 
 # Exposer le port 5000 pour Flask
 EXPOSE 5000
